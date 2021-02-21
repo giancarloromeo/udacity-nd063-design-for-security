@@ -1,0 +1,62 @@
+# Identify tools that will allow you to do the following:
+
+## Scan infrastructure as code templates
+
+- Regula (Terraform), cfripper (CloudFormation)
+
+### Example vulnerability
+
+A static code analysis is performed to check for misconfigurations, vulnerabilities or violation of Least Priviliged Principal in the IaC templates.
+
+Examples of Regula rules:
+- EBS volume encryption should be enabled
+- CloudFront viewer protocol policy should be set to https-only or redirect-to-https
+- S3 bucket server side encryption should be enabled
+- VPC security group rules should not permit ingress from '0.0.0.0/0' except to ports 80 and 443
+- VPC security group rules should not permit ingress from '0.0.0.0/0' to port 22 (SSH)
+- KMS CMK rotation should be enabled
+
+Examples of cfripper rules:
+- Checks that any AWS::CloudFormation::Authentication resource does not contain plain text credentials
+- Checks that Security Groups are defined with an egress policy, even if this is still allowing all outbound traffic
+- Checks for any wildcard principals defined in any statements 
+- Checks for use of the wildcard * character in the Actions of Policy Documents of S3 Bucket Policies
+
+
+##Scan AMI’s or containers for OS vulnerabilities
+
+- Anchore, Clair
+
+### Example vulnerability
+
+- Checks for outdated OS version
+- Checks for unapproved CVE vulnerabilities
+- Checks for Malware in the image
+
+##Scan an AWS environment for cloud configuration vulnerabilities
+
+- AWS Inspector
+- AWS Config
+- AWS Security Hub
+
+### Example vulnerability
+
+In general, these kind of checks are performed:
+
+- Checks that IAM policies follow the least privilege principle
+- Checks whether Security Groups with 0.0.0.0/0 allow only specific inbound TCP or UDP traffic. 
+- Check whether the MFA (Multi-Factor Authentication) is enabled for root account
+
+Examples of AWS Inspector rules:
+- Checks whether the ports are reachable from the internet through an internet gateway (including instances behind Application Load Balancers or Classic Load Balancers), 
+a VPC peering connection, or a VPN through a virtual gateway. 
+These findings also highlight network configurations that allow for potentially malicious access, such as mismanaged security groups, ACLs, IGWs, and so on.
+- Checks whether the EC2 instances in the assessment targets are exposed to common vulnerabilities and exposures (CVEs). 
+Attacks can exploit unpatched vulnerabilities to compromise the confidentiality, integrity, or availability of your service or data. 
+The CVE system provides a reference method for publicly known information security vulnerabilities and exposures.
+
+Examples of AWS Config rules (triggers the evaluation when any resource that matches the rule's scope changes in configuration):
+- Checks that the Amazon Elastic Block Store (Amazon EBS) volumes are encrypted
+- Checks whether the AWS Identity and Access Management users have multi-factor authentication (MFA) enabled
+- Checks whether Amazon Elastic Compute Cloud (Amazon EC2) instances have a public IP association
+- Checks that the Amazon S3 buckets do not allow public read/write access

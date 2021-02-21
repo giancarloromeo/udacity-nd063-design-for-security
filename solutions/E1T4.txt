@@ -1,0 +1,9 @@
+# Based on the architecture diagram, and the steps you have taken so far to upload data and access the application web service, identify at least 2 obvious poor practices as it relates to security.  Include justification.
+
+- The Web Application should stay in a Private Subnet and be reachable only from the Application Load Balancer. 
+It should be possible to access it via AWS Systems Manager > Session Manager assuming the appropriate IAM role.
+
+- The S3 "free recipes" bucket should be reachable only from the Web Application instance. The use of VPC endpoints would block requests that do not originate from the selected VPC network.
+It is a good practice to enable at least the server-side encryption, and in this case it is necessary for the "secret recipe" bucket.
+They remain readable from anyone with the access to the bucket and to the encryption key; if we want to keep them really "secret", we could think to enable a client-side encryption, making the application more complex.
+Versioning is not enabled but doing so would make difficult for infiltrators to corrupt or delete data.

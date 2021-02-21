@@ -1,0 +1,27 @@
+# Research and analyze which of the vulnerabilities appear to be related to the code that was deployed for the environment in this project.
+
+AWS Config:
+
+- The rule named "securityhub-restricted-ssh-871e322a" is noncompliant for both the Application Server and the Attack Instance Security Groups. 
+It checks whether the incoming SSH traffic for the security groups is accessible. 
+To remediate the vulnerability, we can disallow any SSH traffic to the Application Server security group and access the instance using the AWS Systems Manager > Sessions Manager.
+
+- The rule named "securityhub-encrypted-volumes-858bdc38" is non compliant for both the Application Server and the Attack Instances.
+It checks whether the EBS volumes that are in an attached state are encrypted.
+To remediate the vulnerability, we can enable encryption for the volumes.
+
+- The rule named "securityhub-s3-bucket-server-side-encryption-enabled-4359688f" is noncompliant for both "free" and "secret" S3 buckets.
+It checks checks that the Amazon S3 bucket either has Amazon S3 default encryption enabled or that the S3 bucket policy explicitly denies put-object requests without server side encryption.
+To remediate the vulnerability, we can enable encryption for the S3 buckets.
+
+
+AWS Security Hub:
+
+- The findings with "critical" severity are related to the use of the root account. 
+To remediate the vulnerabilities, we should avoid the use of root account altogether after initial account creation.
+It is also highly recommended to enable MFA (Multi-Factor Authentication) for that account.
+
+- The findings with "high" severity highlight the vulnerabilities in the Security Groups configurations.
+Current configuration does not follow the least privilege access principle and are too permissive allowing traffic from 0.0.0.0/0 to port 22 on the Application Server, 
+which means that malicious users can directly attack the Application Server instance from the Internet. 
+To remediate this vulnerability, we can configure the Inbound Rules for WebAppSG to restrict access through port 22 and only allow incoming traffic from the Application Load Balancer.

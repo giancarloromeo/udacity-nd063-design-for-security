@@ -1,0 +1,13 @@
+# Identify 2-3 changes that can be made to our environment to prevent an ssh brute force attack from the internet.
+
+
+- The Port 22 on the Application Server is currently exposed to the Internet. 
+To reduce the risk of intrusion on Port 22, we could restrict the access from a trusted entity (e.g. bastion host).
+- Enable access using the AWS Systems Manager > Session Manager.
+- We could disable the Password authentication changing the "PasswordAuthentication" setting to "no" in the /etc/ssh/sshd_config file.
+After restarting the ssh service, no username/password authentication would be allowed.
+
+# Neither instance should have had access to the secret recipes bucket, in the even that instance API credentials were compromised how could we have prevented access to sensitive data.
+
+- The IAM Role attached to the instances should have least privilege access policy (in this case, no access to S3 "secret" recipe bucket). 
+- Use of client-side encryption allow to store encrypted files into the bucket (accessible only from the user who keep and maintain the key).
